@@ -31,7 +31,64 @@ class BinaryTreeImpl : BinaryTree {
     }
 
     override fun remove(value: Int): Boolean {
-        TODO("Not yet implemented")
+        if (root == null) {
+            return false
+        }
+        return if (root!!.value == value) {
+            root = null
+            true
+        } else {
+            checkChildNodes(root!!, value)
+        }
+    }
+
+    private fun checkChildNodes(currentNode: Node<Int>, value: Int): Boolean {
+        return if (value < currentNode.value) {
+            if (currentNode.leftNode == null) {
+                return false
+            }
+            if (currentNode.leftNode!!.value == value) {
+                removeChildNode(currentNode, true)
+            } else {
+                checkChildNodes(currentNode.leftNode!!, value)
+            }
+        } else {
+            if (currentNode.rightNode == null) {
+                return false
+            }
+            if (currentNode.rightNode!!.value == value) {
+                removeChildNode(currentNode, false)
+            } else {
+                checkChildNodes(currentNode.rightNode!!, value)
+            }
+        }
+    }
+
+    private fun removeChildNode(parentNode: Node<Int>, isLeftChildNode: Boolean): Boolean {
+        val removedNode = if (isLeftChildNode) parentNode.leftNode!! else parentNode.rightNode!!
+        if (isLeftChildNode) {
+            when {
+                // todo: a node has no children
+                removedNode.leftNode == null && removedNode.rightNode == null -> {
+                    parentNode.leftNode = null
+                }
+                // todo: a node has two children
+                removedNode.leftNode != null && removedNode.rightNode != null -> {
+
+                }
+                // todo: a node has exactly one child
+                else -> {
+                    if (removedNode.leftNode != null) {
+                        parentNode.leftNode = removedNode.leftNode
+                    } else {
+                        parentNode.leftNode = removedNode.rightNode
+                    }
+                }
+            }
+        } else {
+
+        }
+        return true
     }
 
     override fun contains(value: Int): Boolean =
