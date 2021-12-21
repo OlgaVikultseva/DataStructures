@@ -14,16 +14,29 @@ fun main(args: Array<String>) {
         insert(110)
     }
 
-    binaryTree.traverseInOrder()
+    with(binaryTree) {
+        test1()
+        test2()
+        test3()
+    }
+}
 
-    binaryTree.remove(74)
-    println("remove(74)")
-    binaryTree.traverseInOrder()
+fun BinaryTreeImpl.test1() {
+    println("case 1: binaryTree.remove(74)")
+    this.remove(74)
+    this.traverseInOrder()
+}
 
-    binaryTree.remove(21)
-    println("remove(21)")
-    binaryTree.traverseInOrder()
+fun BinaryTreeImpl.test2() {
+    println("case 1: binaryTree.remove(90)")
+    this.remove(90)
+    this.traverseInOrder()
+}
 
+fun BinaryTreeImpl.test3() {
+    println("case 1: binaryTree.remove(16)")
+    this.remove(16)
+    this.traverseInOrder()
 }
 
 
