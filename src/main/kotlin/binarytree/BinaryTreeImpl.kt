@@ -30,66 +30,47 @@ class BinaryTreeImpl : BinaryTree {
         }
     }
 
-    override fun remove(value: Int): Boolean {
-        if (root == null) {
-            return false
-        }
-        return if (root!!.value == value) {
-            root = null
-            true
-        } else {
-            checkChildNodes(root!!, value)
-        }
+    override fun remove(value: Int) {
+        root = removeInternal(root, value)
     }
 
-    private fun checkChildNodes(currentNode: Node<Int>, value: Int): Boolean {
-        return if (value < currentNode.value) {
-            if (currentNode.leftNode == null) {
-                return false
-            }
-            if (currentNode.leftNode!!.value == value) {
-                removeChildNode(currentNode, true)
-            } else {
-                checkChildNodes(currentNode.leftNode!!, value)
-            }
-        } else {
-            if (currentNode.rightNode == null) {
-                return false
-            }
-            if (currentNode.rightNode!!.value == value) {
-                removeChildNode(currentNode, false)
-            } else {
-                checkChildNodes(currentNode.rightNode!!, value)
-            }
+    private fun removeInternal(currentNode: Node<Int>?, value: Int): Node<Int>? {
+        if (currentNode == null) {
+            return null
         }
-    }
-
-    private fun removeChildNode(parentNode: Node<Int>, isLeftChildNode: Boolean): Boolean {
-        val removedNode = if (isLeftChildNode) parentNode.leftNode!! else parentNode.rightNode!!
-        if (isLeftChildNode) {
+        if (value == currentNode.value) {
             when {
-                // todo: a node has no children
-                removedNode.leftNode == null && removedNode.rightNode == null -> {
-                    parentNode.leftNode = null
+                // case 1: node has no children
+                currentNode.leftNode == null && currentNode.rightNode == null -> {
+                    return null
                 }
-                // todo: a node has two children
-                removedNode.leftNode != null && removedNode.rightNode != null -> {
-
+                // case 2: node has exactly one child
+                currentNode.rightNode == null -> {
+                    return currentNode.leftNode
                 }
-                // todo: a node has exactly one child
+                currentNode.leftNode == null -> {
+                    return currentNode.rightNode
+                }
+                // case 3: node has two children
                 else -> {
-                    if (removedNode.leftNode != null) {
-                        parentNode.leftNode = removedNode.leftNode
-                    } else {
-                        parentNode.leftNode = removedNode.rightNode
-                    }
+                    val smallestValue = findSmallestValue(currentNode.rightNode!!)
+                    currentNode.value = smallestValue
+                    currentNode.rightNode = removeInternal(currentNode.rightNode, smallestValue)
+                    return currentNode
                 }
             }
-        } else {
-
         }
-        return true
+        return if (value < currentNode.value) {
+            currentNode.leftNode = removeInternal(currentNode.leftNode, value)
+            currentNode
+        } else {
+            currentNode.rightNode = removeInternal(currentNode.rightNode, value)
+            currentNode
+        }
     }
+
+    private fun findSmallestValue(currentNode: Node<Int>): Int =
+        if (currentNode.leftNode == null) currentNode.value else findSmallestValue(currentNode.leftNode!!)
 
     override fun contains(value: Int): Boolean =
         containsInternal(root, value)
@@ -109,6 +90,24 @@ class BinaryTreeImpl : BinaryTree {
             containsInternal(currentNode.leftNode, value)
         } else {
             containsInternal(currentNode.rightNode, value)
+        }
+    }
+
+    override fun traverseInOrder() {
+        if (root == null) {
+            println("Empty tree")
+        } else {
+            traverseInOrderInternal(root!!)
+        }
+    }
+
+    private fun traverseInOrderInternal(currentNode: Node<Int>) {
+        if (currentNode.leftNode != null) {
+            traverseInOrderInternal(currentNode.leftNode!!)
+        }
+        println(currentNode.value)
+        if (currentNode.rightNode != null) {
+            traverseInOrderInternal(currentNode.rightNode!!)
         }
     }
 }

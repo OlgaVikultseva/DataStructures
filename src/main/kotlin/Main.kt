@@ -1,24 +1,29 @@
-import stack.StackImpl
+import binarytree.BinaryTreeImpl
 
 fun main(args: Array<String>) {
 
-    val stack = StackImpl<Int>()
+    val binaryTree = BinaryTreeImpl().apply {
+        insert(80)
+        insert(54)
+        insert(90)
+        insert(16)
+        insert(74)
+        insert(21)
+        insert(38)
+        insert(15)
+        insert(110)
+    }
 
-    stack.push(1)
-    stack.push(2)
-    stack.push(3)
-    stack.printElements()
+    binaryTree.traverseInOrder()
 
-    stack.pop()
-    stack.printElements()
+    binaryTree.remove(74)
+    println("remove(74)")
+    binaryTree.traverseInOrder()
 
-    stack.push(4)
-    stack.printElements()
+    binaryTree.remove(21)
+    println("remove(21)")
+    binaryTree.traverseInOrder()
 
-    println(stack.pop())
-    println(stack.pop())
-    println(stack.pop())
-    println(stack.pop())
 }
 
 
